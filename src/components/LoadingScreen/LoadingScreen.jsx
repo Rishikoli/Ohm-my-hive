@@ -2,9 +2,11 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import './LoadingScreen.css';
 
-const LoadingScreen = () => {
+const LoadingScreen = ({ text = 'Initializing Energy Grid', subtext = 'Connecting to smart grid network...', fullScreen = true }) => {
+  const containerStyle = fullScreen ? 'loading-screen' : 'loading-container';
+  
   return (
-    <Box className="loading-screen">
+    <Box className={containerStyle}>
       <div className="hexagon-loader">
         <div className="hexagon hex1"></div>
         <div className="hexagon hex2"></div>
@@ -21,7 +23,7 @@ const LoadingScreen = () => {
           textShadow: '0 0 10px rgba(255, 183, 77, 0.5)'
         }}
       >
-        Initializing Energy Grid
+        {text}
       </Typography>
       <Typography 
         variant="body1" 
@@ -33,7 +35,7 @@ const LoadingScreen = () => {
           textAlign: 'center'
         }}
       >
-        Connecting to smart grid network...
+        {subtext}
       </Typography>
     </Box>
   );

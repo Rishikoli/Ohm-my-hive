@@ -1,36 +1,43 @@
 import React, { useState } from 'react';
-import { Box, Paper, IconButton, TextField, Typography } from '@mui/material';
+import { Box, Paper, IconButton, TextField, Typography, CircularProgress } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
+import geminiService from '../../services/geminiService';
 import './Chatbot.css';
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { text: "Hello! How can I help you today?", isBot: true }
+    { text: "Hello! I'm your Smart Grid Assistant. How can I help you optimize your energy usage today?", isBot: true }
   ]);
   const [input, setInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     if (input.trim()) {
-      // Add user message
-      setMessages([...messages, { text: input, isBot: false }]);
-      
-      // Simulate bot response
-      setTimeout(() => {
+      const userMessage = { text: input.trim(), isBot: false };
+      setMessages(prev => [...prev, userMessage]);
+      setInput('');
+      setIsTyping(true);
+
+      try {
+        const response = await geminiService.chat(input.trim(), messages);
+        setMessages(prev => [...prev, { text: response, isBot: true }]);
+      } catch (error) {
+        console.error('Error getting response:', error);
         setMessages(prev => [...prev, {
-          text: "Thanks for your message! Our team will get back to you soon.",
+          text: "I apologize, but I'm having trouble processing your request. Please try again later.",
           isBot: true
         }]);
-      }, 1000);
-      
-      setInput('');
+      } finally {
+        setIsTyping(false);
+      }
     }
   };
 
@@ -85,14 +92,17 @@ const Chatbot = () => {
               </Box>
 
               {/* Chat Messages */}
-              <Box sx={{
-                flex: 1,
-                overflowY: 'auto',
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 1,
-              }}>
+              <Box 
+                sx={{
+                  flex: 1,
+                  overflowY: 'auto',
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 1,
+                }}
+                className="messages-container"
+              >
                 {messages.map((message, index) => (
                   <Box
                     key={index}
@@ -103,17 +113,22 @@ const Chatbot = () => {
                   >
                     <Paper
                       sx={{
-                        p: 1,
+                        p: 1.5,
                         background: message.isBot 
                           ? 'rgba(255, 183, 77, 0.1)'
                           : 'rgba(255, 183, 77, 0.2)',
                         border: '1px solid rgba(255, 183, 77, 0.3)',
+                        borderRadius: '10px',
+                        borderTopLeftRadius: message.isBot ? '0px' : '10px',
+                        borderTopRightRadius: message.isBot ? '10px' : '0px',
                       }}
                     >
                       <Typography
                         sx={{
-                          color: '#FFB74D',
-                          fontFamily: "'Rajdhani', sans-serif",
+                          color: '#fff',
+                          fontSize: '0.9rem',
+                          lineHeight: '1.4',
+                          whiteSpace: 'pre-wrap',
                         }}
                       >
                         {message.text}
@@ -121,6 +136,11 @@ const Chatbot = () => {
                     </Paper>
                   </Box>
                 ))}
+                {isTyping && (
+                  <Box sx={{ alignSelf: 'flex-start', pl: 1 }}>
+                    <CircularProgress size={20} sx={{ color: '#FFB74D' }} />
+                  </Box>
+                )}
               </Box>
 
               {/* Chat Input */}
@@ -143,7 +163,7 @@ const Chatbot = () => {
                   placeholder="Type your message..."
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      color: '#FFB74D',
+                      color: '#fff',
                       '& fieldset': {
                         borderColor: 'rgba(255, 183, 77, 0.3)',
                       },
@@ -154,11 +174,20 @@ const Chatbot = () => {
                         borderColor: '#FFB74D',
                       },
                     },
+                    '& .MuiInputBase-input::placeholder': {
+                      color: 'rgba(255, 255, 255, 0.5)',
+                    },
                   }}
                 />
                 <IconButton 
                   type="submit"
-                  sx={{ color: '#FFB74D' }}
+                  disabled={!input.trim() || isTyping}
+                  sx={{
+                    color: '#FFB74D',
+                    '&.Mui-disabled': {
+                      color: 'rgba(255, 183, 77, 0.3)',
+                    },
+                  }}
                 >
                   <SendIcon />
                 </IconButton>
@@ -168,22 +197,17 @@ const Chatbot = () => {
         )}
       </AnimatePresence>
 
-      {/* Chatbot Toggle Button */}
+      {/* Chat Toggle Button */}
       <motion.div
-        className="chatbot-toggle"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+        className="chat-toggle"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         onClick={toggleChat}
       >
-        <img
-          src="/assets/chatbot-icon.png"
-          alt="Chat with us"
-          style={{
-            width: '80px',
-            height: '80px',
-            cursor: 'pointer',
-            filter: 'drop-shadow(0 0 10px rgba(255, 183, 77, 0.3))',
-          }}
+        <img 
+          src="/assets/chatbot-icon.png" 
+          alt="Chat"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </motion.div>
     </Box>

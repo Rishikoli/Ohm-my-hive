@@ -3,6 +3,27 @@ import { API_CONFIG } from '../config/apiConfig';
 
 const genAI = new GoogleGenerativeAI(API_CONFIG.GEMINI_API_KEY);
 
+// Helper function to extract and parse JSON from Gemini response
+const extractJsonFromResponse = (responseText) => {
+  try {
+    // First try direct JSON parse
+    return JSON.parse(responseText);
+  } catch (e) {
+    try {
+      // Remove markdown code block indicators if present
+      const jsonString = responseText.replace(/```(json|JSON)?/g, '').trim();
+      return JSON.parse(jsonString);
+    } catch (e2) {
+      // If still fails, try to find JSON object within the text
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        return JSON.parse(jsonMatch[0]);
+      }
+      throw new Error('No valid JSON found in response');
+    }
+  }
+};
+
 export const geminiService = {
   // Predict energy price based on market conditions
   async predictEnergyPrice(marketData) {
@@ -23,15 +44,20 @@ export const geminiService = {
         3. Weather impact on renewable energy
         4. Market trends
         
-        Return only the numerical value in credits/kWh.
-      `;
+        Return a JSON object with the following structure ONLY (no markdown, no explanation):
+        {
+          "predictedPrice": number,
+          "confidence": number
+        }`;
 
       const result = await model.generateContent(prompt);
-      const price = parseFloat(result.response.text());
-      return isNaN(price) ? marketData.historicalPrice : price;
+      return extractJsonFromResponse(result.response.text());
     } catch (error) {
       console.error('Error predicting energy price:', error);
-      return marketData.historicalPrice;
+      return {
+        predictedPrice: marketData.historicalPrice,
+        confidence: 0
+      };
     }
   },
 
@@ -40,7 +66,16 @@ export const geminiService = {
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
       
-      const prompt = `Based on the following market conditions and user profile, generate a trading recommendation:
+      const prompt = `Based on the following market conditions and user profile, generate a trading recommendation.
+Return ONLY a JSON object with this exact structure (no markdown, no explanation):
+{
+  "action": "buy" or "sell" or "wait",
+  "amount": number,
+  "price": number,
+  "reasoning": "string",
+  "timing": "immediate" or "wait",
+  "confidence": number
+}
 
 Market Conditions:
 - Average Price: ${marketConditions.averagePrice} Credits/kWh
@@ -51,28 +86,10 @@ Market Conditions:
 User Profile:
 - Available Energy: ${userProfile.availableEnergy} kWh
 - Trading Power: ${userProfile.tradingPower} Credits
-- Risk Tolerance: ${userProfile.riskTolerance || 'Moderate'}
-
-Provide a trading recommendation in the following JSON format:
-{
-  "action": "buy or sell",
-  "amount": "recommended amount in kWh",
-  "price": "recommended price per kWh",
-  "reasoning": "brief explanation",
-  "timing": "immediate or wait",
-  "confidence": "percentage between 0-100"
-}`;
+- Risk Tolerance: ${userProfile.riskTolerance || 'Moderate'}`;
 
       const result = await model.generateContent(prompt);
-      const responseText = result.response.text();
-      
-      // Find the JSON object in the response
-      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error('No valid JSON found in response');
-      }
-      
-      return JSON.parse(jsonMatch[0]);
+      return extractJsonFromResponse(result.response.text());
     } catch (error) {
       console.error('Error generating trading recommendations:', error);
       return {
@@ -117,7 +134,7 @@ Provide a trading recommendation in the following JSON format:
       `;
 
       const result = await model.generateContent(prompt);
-      return JSON.parse(result.response.text());
+      return extractJsonFromResponse(result.response.text());
     } catch (error) {
       console.error('Error analyzing transaction risk:', error);
       return null;
@@ -153,7 +170,7 @@ Provide a trading recommendation in the following JSON format:
       `;
 
       const result = await model.generateContent(prompt);
-      return JSON.parse(result.response.text());
+      return extractJsonFromResponse(result.response.text());
     } catch (error) {
       console.error('Error generating smart contract terms:', error);
       return null;
@@ -186,33 +203,7 @@ Return the data as a valid JSON object with this exact structure:
 The response should be ONLY the JSON object, nothing else.`;
 
       const result = await model.generateContent(prompt);
-      const text = result.response.text().trim();
-      
-      // Remove any markdown code block indicators if present
-      const jsonStr = text.replace(/^```json\n|\n```$/g, '').trim();
-      
-      try {
-        return JSON.parse(jsonStr);
-      } catch (parseError) {
-        console.error('Failed to parse order book JSON:', parseError);
-        // Return default order book
-        return {
-          buyOrders: [
-            { price: marketData.currentPrice * 0.95, amount: 100 },
-            { price: marketData.currentPrice * 0.97, amount: 150 },
-            { price: marketData.currentPrice * 0.98, amount: 200 },
-            { price: marketData.currentPrice * 0.99, amount: 250 },
-            { price: marketData.currentPrice * 0.995, amount: 300 }
-          ],
-          sellOrders: [
-            { price: marketData.currentPrice * 1.005, amount: 300 },
-            { price: marketData.currentPrice * 1.01, amount: 250 },
-            { price: marketData.currentPrice * 1.02, amount: 200 },
-            { price: marketData.currentPrice * 1.03, amount: 150 },
-            { price: marketData.currentPrice * 1.05, amount: 100 }
-          ]
-        };
-      }
+      return extractJsonFromResponse(result.response.text());
     } catch (error) {
       console.error('Error generating order book:', error);
       return {
@@ -247,7 +238,7 @@ The response should be ONLY the JSON object, nothing else.`;
       `;
 
       const result = await model.generateContent(prompt);
-      return JSON.parse(result.response.text());
+      return extractJsonFromResponse(result.response.text());
     } catch (error) {
       console.error('Error predicting load management:', error);
       return null;
@@ -278,7 +269,7 @@ The response should be ONLY the JSON object, nothing else.`;
       `;
 
       const result = await model.generateContent(prompt);
-      return JSON.parse(result.response.text());
+      return extractJsonFromResponse(result.response.text());
     } catch (error) {
       console.error('Error analyzing active nodes:', error);
       return null;
@@ -310,7 +301,7 @@ The response should be ONLY the JSON object, nothing else.`;
       `;
 
       const result = await model.generateContent(prompt);
-      return JSON.parse(result.response.text());
+      return extractJsonFromResponse(result.response.text());
     } catch (error) {
       console.error('Error generating state energy overview:', error);
       return null;
@@ -347,15 +338,7 @@ The response should be ONLY the JSON object, nothing else.`;
         }`;
 
       const result = await model.generateContent(prompt);
-      const responseText = result.response.text();
-      
-      // Parse JSON from response
-      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error('No valid JSON found in response');
-      }
-      
-      return JSON.parse(jsonMatch[0]);
+      return extractJsonFromResponse(result.response.text());
     } catch (error) {
       console.error('Error predicting electricity usage:', error);
       return {
@@ -365,6 +348,43 @@ The response should be ONLY the JSON object, nothing else.`;
         gridStabilityImpact: "medium",
         confidenceScore: 0
       };
+    }
+  },
+
+  // Chat with the AI assistant
+  async chat(message, chatHistory = []) {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      
+      const systemPrompt = `You are an AI assistant for a smart energy grid platform called BioGrid. Your role is to help users understand and optimize their energy usage, trading, and environmental impact.
+
+Key features you can assist with:
+1. Energy Trading: Explain market conditions, trading strategies, and provide basic guidance
+2. Load Management: Help users understand their energy consumption patterns
+3. Climate Impact: Explain carbon footprint calculations and provide sustainability tips
+4. Smart Grid: Explain how the smart grid works and its benefits
+5. Energy Optimization: Provide tips for reducing energy usage and costs
+
+Guidelines:
+- Be concise but informative
+- Use a professional yet friendly tone
+- Focus on energy-related topics
+- Provide specific, actionable advice when possible
+- Express numerical data clearly
+- If unsure, acknowledge limitations and suggest consulting official documentation
+
+Current chat history:
+${chatHistory.map(msg => `${msg.isBot ? 'Assistant' : 'User'}: ${msg.text}`).join('\n')}
+
+User's latest message: ${message}
+
+Respond in a helpful and informative way while staying within your role as a smart grid assistant.`;
+
+      const result = await model.generateContent(systemPrompt);
+      return result.response.text();
+    } catch (error) {
+      console.error('Error in chat:', error);
+      return "I apologize, but I'm having trouble processing your request at the moment. Please try again later.";
     }
   },
 };

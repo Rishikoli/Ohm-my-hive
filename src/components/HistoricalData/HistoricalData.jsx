@@ -37,7 +37,7 @@ const HistoricalData = () => {
           variant="outlined" 
           sx={{ 
             '& .MuiButton-root': {
-              color: '#FFB74D',
+              color: '#ffffff',
               borderColor: 'rgba(255, 183, 77, 0.3)',
               '&.active': {
                 backgroundColor: 'rgba(255, 183, 77, 0.1)',

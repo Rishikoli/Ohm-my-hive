@@ -9,7 +9,6 @@ import { soundManager } from './SoundEffects';
 import { swarmApi } from '../services/apiService';
 import { useSwarm } from '../context/SwarmContext';
 import LoadingScreen from './LoadingScreen/LoadingScreen';
-import ActiveNodes from './ActiveNodes/ActiveNodes';
 import EnergyConsumptionOverview from './EnergyConsumptionOverview/EnergyConsumptionOverview';
 import DashboardBeeInfo from './DashboardBeeInfo';
 import EnergyPredictions from './EnergyPredictions/EnergyPredictions';
@@ -44,9 +43,7 @@ function Dashboard() {
     // Update state data with generated data
     setStateData({
       ...data,
-      consumptionData,
-      activeNodes: Math.floor(10 + Math.random() * 20), // Random number of active nodes
-      totalNodes: 30
+      consumptionData
     });
   };
 
@@ -74,130 +71,116 @@ function Dashboard() {
         <BeeTrail />
         <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
-            {/* Bee-Inspired Information Section */}
+            {/* Header Section */}
             <Grid item xs={12}>
-              <DashboardBeeInfo />
+              <Paper
+                sx={{
+                  p: 3,
+                  background: 'rgba(26, 26, 26, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(255, 183, 77, 0.2)',
+                }}
+              >
+                <Typography variant="h4" sx={{ color: '#FFB74D', mb: 2 }}>
+                  Energy Management Dashboard
+                </Typography>
+                <DashboardBeeInfo />
+              </Paper>
             </Grid>
-            
+
             {/* Map and Overview Section */}
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={8}>
               <Paper
                 sx={{
                   p: 2,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  minHeight: 370,
+                  background: 'rgba(26, 26, 26, 0.95)',
                   backdropFilter: 'blur(10px)',
-                  backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                  borderRadius: '10px',
                   border: '1px solid rgba(255, 183, 77, 0.2)',
-                  '&:hover': {
-                    borderColor: 'rgba(255, 183, 77, 0.4)',
-                    boxShadow: '0 4px 20px rgba(255, 183, 77, 0.2)',
-                  },
+                  minHeight: 400,
                 }}
               >
                 <IndiaMap onStateSelect={handleStateSelect} />
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={6}>
-              <Paper 
-                sx={{ 
-                  p: 2,
-                  minHeight: 370,
-                  backdropFilter: 'blur(10px)',
-                  backgroundColor: 'rgba(26, 26, 26, 0.95)',
-                  border: '1px solid rgba(255, 183, 77, 0.2)',
-                  '&:hover': {
-                    borderColor: 'rgba(255, 183, 77, 0.4)',
-                    boxShadow: '0 4px 20px rgba(255, 183, 77, 0.2)',
-                  },
-                }}
-              >
-                <HistoricalData />
-              </Paper>
-            </Grid>
-
-            <Grid item xs={12}>
-              <EnergyPredictions 
-                stateData={stateData} 
-                historicalData={{
-                  averageConsumption: stateData?.consumptionData?.total || 0,
-                  season: getSeason(),
-                  industrialIndex: 0.8 // This should be replaced with actual data
-                }} 
-              />
-            </Grid>
-
+            {/* Energy Overview */}
             <Grid item xs={12} md={4}>
               <Paper
                 sx={{
                   p: 3,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: 240,
+                  background: 'rgba(26, 26, 26, 0.95)',
                   backdropFilter: 'blur(10px)',
-                  backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                  borderRadius: '10px',
                   border: '1px solid rgba(255, 183, 77, 0.2)',
-                  '&:hover': {
-                    borderColor: 'rgba(255, 183, 77, 0.4)',
-                    boxShadow: '0 4px 20px rgba(255, 183, 77, 0.2)',
-                  },
+                  minHeight: 400,
                 }}
               >
-                <Typography variant="h6" gutterBottom sx={{ color: '#FFD180' }}>
-                  Load Management {selectedState ? `- ${selectedState}` : ''}
+                <Typography variant="h6" sx={{ color: '#FFD180', mb: 2 }}>
+                  Energy Overview {selectedState ? `- ${selectedState}` : ''}
                 </Typography>
+                <EnergyConsumptionOverview data={stateData?.consumptionData} />
+              </Paper>
+            </Grid>
+
+            {/* Load Management */}
+            <Grid item xs={12} md={6}>
+              <Paper
+                sx={{
+                  p: 3,
+                  background: 'rgba(26, 26, 26, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(255, 183, 77, 0.2)',
+                  minHeight: 400,
+                }}
+              >
                 <LoadManagement data={stateData} />
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            {/* Historical Data */}
+            <Grid item xs={12} md={6}>
               <Paper
                 sx={{
                   p: 3,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: 240,
+                  background: 'rgba(26, 26, 26, 0.95)',
                   backdropFilter: 'blur(10px)',
-                  backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                  borderRadius: '10px',
                   border: '1px solid rgba(255, 183, 77, 0.2)',
-                  '&:hover': {
-                    borderColor: 'rgba(255, 183, 77, 0.4)',
-                    boxShadow: '0 4px 20px rgba(255, 183, 77, 0.2)',
-                  },
+                  minHeight: 400,
                 }}
               >
-                <Typography variant="h6" gutterBottom sx={{ color: '#FFD180' }}>
-                  Active Nodes {selectedState ? `- ${selectedState}` : ''}
+                <Typography variant="h6" sx={{ color: '#FFD180', mb: 2 }}>
+                  Historical Data
                 </Typography>
-                <ActiveNodes 
-                  activeNodes={stateData?.activeNodes || 0}
-                  totalNodes={stateData?.totalNodes || 0}
-                />
+                <HistoricalData data={stateData} />
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            {/* AI Predictions */}
+            <Grid item xs={12}>
               <Paper
                 sx={{
                   p: 3,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: 240,
+                  background: 'rgba(26, 26, 26, 0.95)',
                   backdropFilter: 'blur(10px)',
-                  backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                  borderRadius: '10px',
                   border: '1px solid rgba(255, 183, 77, 0.2)',
-                  '&:hover': {
-                    borderColor: 'rgba(255, 183, 77, 0.4)',
-                    boxShadow: '0 4px 20px rgba(255, 183, 77, 0.2)',
-                  },
                 }}
               >
-                <Typography variant="h6" gutterBottom sx={{ color: '#FFD180' }}>
-                  Energy Consumption Overview {selectedState ? `- ${selectedState}` : ''}
+                <Typography variant="h6" sx={{ color: '#FFD180', mb: 2 }}>
+                  AI Energy Predictions
                 </Typography>
-                <EnergyConsumptionOverview data={stateData?.consumptionData} />
+                <EnergyPredictions 
+                  stateData={stateData} 
+                  historicalData={{
+                    averageConsumption: stateData?.consumptionData?.total || 0,
+                    season: getSeason(),
+                    industrialIndex: 0.8
+                  }}
+                />
               </Paper>
             </Grid>
           </Grid>

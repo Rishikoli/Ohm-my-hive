@@ -1,0 +1,8 @@
+@keyframes wing {
+  from {
+    transform: scaleX(1) rotate(10deg);
+  }
+  to {
+    transform: scaleX(0.8) rotate(-10deg);
+  }
+}
