@@ -1,0 +1,36 @@
+.chatbot-container {
+  position: fixed;
+  bottom: 50px;
+  left: 30px;
+  z-index: 1000;
+  height: 60px;
+}
+
+.chatbot-window {
+  position: absolute;
+  bottom: 100px;
+  left: 0;
+}
+
+.chatbot-toggle {
+  position: relative;
+  z-index: 1001;
+}
+
+/* Custom Scrollbar for Webkit browsers */
+.chatbot-window ::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chatbot-window ::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.95);
+}
+
+.chatbot-window ::-webkit-scrollbar-thumb {
+  background: rgba(255, 183, 77, 0.3);
+  border-radius: 3px;
+}
+
+.chatbot-window ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 183, 77, 0.5);
+}

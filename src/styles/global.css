@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+
+:root {
+  --font-futuristic: 'Orbitron', sans-serif;
+}
+
+* {
+  font-family: var(--font-futuristic) !important;
+}
+
+button, 
+.MuiButton-root {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease !important;
+}
+
+button:hover,
+.MuiButton-root:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(255, 183, 77, 0.4) !important;
+}
+
+button:active,
+.MuiButton-root:active {
+  transform: translateY(1px);
+}
+
+/* Glowing effect on hover */
+button::after,
+.MuiButton-root::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,183,77,0.2) 0%, rgba(255,183,77,0) 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+button:hover::after,
+.MuiButton-root:hover::after {
+  opacity: 1;
+}

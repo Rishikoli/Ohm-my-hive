@@ -1,0 +1,38 @@
+/* Default cursor */
+* {
+    cursor: url('../assets/cursor.png'), auto !important;
+}
+
+/* Clickable elements */
+a, button, [role="button"], input[type="submit"], input[type="button"], 
+.MuiButtonBase-root, .clickable, [onclick], select, input[type="checkbox"], 
+input[type="radio"], .MuiIconButton-root {
+    cursor: pointer !important;
+}
+
+/* Text inputs */
+input[type="text"], input[type="password"], input[type="email"], 
+input[type="number"], input[type="search"], input[type="tel"], 
+input[type="url"], textarea {
+    cursor: text !important;
+}
+
+/* Disabled elements */
+*:disabled, .disabled, [aria-disabled="true"] {
+    cursor: not-allowed !important;
+}
+
+/* Loading state */
+.loading, .processing {
+    cursor: wait !important;
+}
+
+/* Resizable elements */
+.resizable {
+    cursor: move !important;
+}
+
+/* Custom hover effect for interactive elements */
+a:hover, button:hover, [role="button"]:hover, .MuiButtonBase-root:hover {
+    cursor: pointer !important;
+}

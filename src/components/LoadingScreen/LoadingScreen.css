@@ -1,0 +1,112 @@
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.hexagon-loader {
+  position: relative;
+  width: 150px;
+  height: 150px;
+}
+
+.hexagon {
+  position: absolute;
+  width: 100px;
+  height: 110px;
+  background: transparent;
+  border: 4px solid transparent;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  animation: rotate 3s linear infinite;
+}
+
+.hex1 {
+  border-color: #FFB74D;
+  animation-delay: 0s;
+}
+
+.hex2 {
+  border-color: #4CAF50;
+  animation-delay: -1s;
+  transform: scale(0.8);
+}
+
+.hex3 {
+  border-color: #2196F3;
+  animation-delay: -2s;
+  transform: scale(0.6);
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotateZ(0deg);
+    opacity: 1;
+  }
+  33% {
+    transform: rotateZ(120deg);
+    opacity: 0.7;
+  }
+  66% {
+    transform: rotateZ(240deg);
+    opacity: 0.4;
+  }
+  100% {
+    transform: rotateZ(360deg);
+    opacity: 1;
+  }
+}
+
+.loading-text {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.loading-subtext {
+  opacity: 0;
+  animation: fadeInOut 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+/* Glowing effect for hexagons */
+.hexagon::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: inherit;
+  filter: blur(8px);
+  opacity: 0.4;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
