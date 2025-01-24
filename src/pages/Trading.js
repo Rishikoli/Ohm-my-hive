@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Container, Grid, Paper, Typography } from '@mui/material';
+import { Box, Container, Grid, Paper, Typography, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import TradingChart from '../components/trading/TradingChart';
 import OrderBook from '../components/trading/OrderBook';
 import TradingForm from '../components/trading/TradingForm';
@@ -74,22 +78,11 @@ const Trading = () => {
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
             flexShrink: 0,
           }}>
-            <Typography variant="h4" sx={{
-              color: '#FFB74D',
-              fontWeight: 700,
-              textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
-              fontFamily: "'Orbitron', sans-serif",
-            }}>
-              P2P Energy Trading
+            <Typography variant="h4" gutterBottom sx={{ color: '#FFB74D' }}>
+              Swarm-Intelligent Market Analysis
             </Typography>
-            <Typography variant="subtitle1" sx={{
-              color: 'rgba(255, 183, 77, 0.8)',
-              mt: 1,
-              fontFamily: "'Rajdhani', sans-serif",
-              fontSize: '1.1rem',
-              fontWeight: 500,
-            }}>
-              Trade energy directly with other users in real-time
+            <Typography variant="body1" paragraph sx={{ color: '#FFF' }}>
+              Harness the power of bee-inspired algorithms to analyze energy market trends and predict stock movements.
             </Typography>
           </Box>
 
@@ -218,6 +211,133 @@ const Trading = () => {
                 </motion.div>
               </Grid>
             </Grid>
+
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={4}>
+                <Paper sx={{
+                  p: 3,
+                  background: 'rgba(26, 26, 26, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(255, 183, 77, 0.2)',
+                }}>
+                  <Typography variant="h6" sx={{ color: '#FFB74D', mb: 2 }}>
+                    Waggle Dance Analytics
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#FFF' }}>
+                    Like bees performing waggle dances to communicate resource locations,
+                    our AI identifies and communicates profitable market patterns through
+                    advanced pattern recognition algorithms.
+                  </Typography>
+                </Paper>
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <Paper sx={{
+                  p: 3,
+                  background: 'rgba(26, 26, 26, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(255, 183, 77, 0.2)',
+                }}>
+                  <Typography variant="h6" sx={{ color: '#FFB74D', mb: 2 }}>
+                    Hive Mind Predictions
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#FFF' }}>
+                    Utilizing collective intelligence inspired by bee colonies to aggregate
+                    market signals and generate high-probability trading opportunities in
+                    energy sector stocks.
+                  </Typography>
+                </Paper>
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <Paper sx={{
+                  p: 3,
+                  background: 'rgba(26, 26, 26, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(255, 183, 77, 0.2)',
+                }}>
+                  <Typography variant="h6" sx={{ color: '#FFB74D', mb: 2 }}>
+                    Foraging Strategy Optimization
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#FFF' }}>
+                    Just as bees optimize their nectar collection routes, our system
+                    continuously refines trading strategies based on historical performance
+                    and market conditions.
+                  </Typography>
+                </Paper>
+              </Grid>
+            </Grid>
+
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="h5" gutterBottom sx={{ color: '#FFB74D' }}>
+                Market Intelligence Features
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <List>
+                    <ListItem>
+                      <ListItemIcon>
+                        <TrendingUpIcon sx={{ color: '#FFB74D' }} />
+                      </ListItemIcon>
+                      <ListItemText 
+                        primary="Pattern Recognition" 
+                        secondary="Identify recurring market patterns using bee-inspired algorithms"
+                        sx={{ 
+                          '& .MuiListItemText-primary': { color: '#FFD180' },
+                          '& .MuiListItemText-secondary': { color: '#FFF' }
+                        }}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon>
+                        <TimelineIcon sx={{ color: '#FFB74D' }} />
+                      </ListItemIcon>
+                      <ListItemText 
+                        primary="Trend Analysis" 
+                        secondary="Track and analyze energy sector trends using swarm intelligence"
+                        sx={{ 
+                          '& .MuiListItemText-primary': { color: '#FFD180' },
+                          '& .MuiListItemText-secondary': { color: '#FFF' }
+                        }}
+                      />
+                    </ListItem>
+                  </List>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <List>
+                    <ListItem>
+                      <ListItemIcon>
+                        <ShowChartIcon sx={{ color: '#FFB74D' }} />
+                      </ListItemIcon>
+                      <ListItemText 
+                        primary="Market Sentiment" 
+                        secondary="Analyze market sentiment using collective intelligence"
+                        sx={{ 
+                          '& .MuiListItemText-primary': { color: '#FFD180' },
+                          '& .MuiListItemText-secondary': { color: '#FFF' }
+                        }}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon>
+                        <AssessmentIcon sx={{ color: '#FFB74D' }} />
+                      </ListItemIcon>
+                      <ListItemText 
+                        primary="Risk Assessment" 
+                        secondary="Evaluate trading risks using bee-inspired decision models"
+                        sx={{ 
+                          '& .MuiListItemText-primary': { color: '#FFD180' },
+                          '& .MuiListItemText-secondary': { color: '#FFF' }
+                        }}
+                      />
+                    </ListItem>
+                  </List>
+                </Grid>
+              </Grid>
+            </Box>
           </Container>
         </Box>
       </motion.div>

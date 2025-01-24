@@ -136,16 +136,31 @@ function Dashboard() {
   }
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
       >
         <BeeTrail />
         <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
+            {/* AI-Driven Energy Predictions - Full Width at Top */}
+            <Grid item xs={12}>
+              <Paper
+                sx={{
+                  p: 3,
+                  background: 'rgba(26, 26, 26, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(255, 183, 77, 0.2)',
+                  mb: 3,
+                }}
+              >
+                <EnergyPredictions selectedState={selectedState} data={stateData} />
+              </Paper>
+            </Grid>
+
             {/* Header Section */}
             <Grid item xs={12}>
               <Paper
@@ -234,24 +249,6 @@ function Dashboard() {
                   </Paper>
                 </Grid>
               </Grid>
-            </Grid>
-
-            {/* Bottom Section - AI Predictions */}
-            <Grid item xs={12}>
-              <Paper
-                sx={{
-                  p: 3,
-                  background: 'rgba(26, 26, 26, 0.95)',
-                  backdropFilter: 'blur(10px)',
-                  borderRadius: '10px',
-                  border: '1px solid rgba(255, 183, 77, 0.2)',
-                }}
-              >
-                <Typography variant="h6" sx={{ color: '#FFD180', mb: 2 }}>
-                  AI-Driven Energy Predictions
-                </Typography>
-                <EnergyPredictions selectedState={selectedState} data={stateData} />
-              </Paper>
             </Grid>
           </Grid>
         </Container>

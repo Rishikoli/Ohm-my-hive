@@ -525,12 +525,36 @@ Respond in a helpful and informative way while staying within your role as a sma
         - Peak Hours: ${regionData.peakHours}
         - Weather: ${regionData.weather}
         
+        ${regionData.region === 'East' ? `
+        For East Region, consider these specific factors:
+        1. High industrial load due to steel and mining sectors
+        2. Monsoon impact on hydroelectric power
+        3. Rural electrification challenges
+        4. Coal-dependent power generation
+        5. Growing renewable energy potential
+        6. Grid modernization needs
+        7. Peak demand management in industrial zones
+        8. Energy access disparities
+        ` : ''}
+        
         Provide a sentiment analysis considering:
         1. Energy efficiency
         2. Grid reliability
         3. Sustainability
         4. Consumer behavior
         5. Future outlook
+        
+        ${regionData.region === 'East' ? `
+        For East Region, provide specific recommendations considering:
+        1. Industrial load optimization
+        2. Renewable integration in mining sector
+        3. Rural smart grid implementation
+        4. Monsoon-resilient infrastructure
+        5. Clean coal technologies
+        6. Solar and wind potential in specific states
+        7. Energy storage solutions
+        8. Demand response programs
+        ` : ''}
         
         Return a JSON object with the following structure ONLY (no markdown, no explanation):
         {
@@ -551,8 +575,23 @@ Respond in a helpful and informative way while staying within your role as a sma
             "trend": string,
             "analysis": string
           },
-          "recommendations": string[],
-          "keyInsights": string[]
+          "recommendations": ${regionData.region === 'East' ? `[
+            "Implement smart monitoring systems in steel and mining industries",
+            "Develop hydroelectric power storage for monsoon season optimization",
+            "Deploy microgrids in rural areas with solar integration",
+            "Modernize coal plants with clean technology and carbon capture",
+            "Establish industrial demand response programs",
+            "Create energy storage hubs near industrial clusters",
+            "Implement weather-resilient transmission infrastructure",
+            "Develop renewable energy corridors in mineral-rich zones"
+          ]` : 'string[]'},
+          "keyInsights": ${regionData.region === 'East' ? `[
+            "High industrial load concentration requires targeted efficiency measures",
+            "Seasonal variations significantly impact hydroelectric generation",
+            "Rural areas show potential for distributed renewable systems",
+            "Grid modernization crucial for handling industrial demand fluctuations",
+            "Significant opportunity for renewable integration in mining operations"
+          ]` : 'string[]'}
         }`;
 
       const result = await model.generateContent(prompt);

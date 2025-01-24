@@ -120,256 +120,266 @@ const EnergyPredictions = ({ selectedState, data }) => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={4}>
-          <TextField
-            select
-            fullWidth
-            label="Select Region"
-            value={selectedRegion}
-            onChange={handleRegionChange}
-            variant="outlined"
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                color: '#FFB74D',
-                '& fieldset': {
-                  borderColor: 'rgba(255, 183, 77, 0.5)',
-                },
-                '&:hover fieldset': {
-                  borderColor: '#FFB74D',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#FFB74D',
-                },
-              },
-              '& .MuiInputLabel-root': {
-                color: '#FFB74D',
-              },
-              '& .MuiSelect-icon': {
-                color: '#FFB74D',
-              },
-            }}
-          >
-            {regions.map((region) => (
-              <MenuItem key={region} value={region}>
-                {region} Region
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-        <Grid item xs={12} md={2}>
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={handlePredict}
-            disabled={loading}
-            sx={{
-              height: '56px',
-              bgcolor: 'rgba(255, 183, 77, 0.2)',
-              color: '#FFFFFF',
-              '&:hover': {
-                bgcolor: 'rgba(255, 183, 77, 0.3)',
-              },
-            }}
-          >
-            {loading ? <CircularProgress size={24} /> : 'Predict'}
-          </Button>
-        </Grid>
-      </Grid>
-
-      {error && (
-        <Typography color="error" sx={{ mt: 2 }}>
-          {error}
+      <Paper
+        sx={{
+          p: 3,
+          background: 'rgba(26, 26, 26, 0.95)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '10px',
+          border: '1px solid rgba(255, 183, 77, 0.2)',
+          mb: 3,
+        }}
+      >
+        <Typography variant="h5" gutterBottom sx={{ color: '#FFB74D', mb: 3 }}>
+          AI-Driven Energy Predictions
         </Typography>
-      )}
+        <Grid container spacing={3} alignItems="center">
+          <Grid item xs={12} md={4}>
+            <TextField
+              select
+              fullWidth
+              label="Select Region"
+              value={selectedRegion}
+              onChange={handleRegionChange}
+              variant="outlined"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  color: '#FFB74D',
+                  '& fieldset': {
+                    borderColor: 'rgba(255, 183, 77, 0.5)',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#FFB74D',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#FFB74D',
+                  },
+                },
+                '& .MuiInputLabel-root': {
+                  color: '#FFB74D',
+                },
+                '& .MuiSelect-icon': {
+                  color: '#FFB74D',
+                },
+              }}
+            >
+              {regions.map((region) => (
+                <MenuItem key={region} value={region}>
+                  {region} Region
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12} md={2}>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={handlePredict}
+              disabled={loading}
+              sx={{
+                height: '56px',
+                bgcolor: 'rgba(255, 183, 77, 0.2)',
+                color: '#FFFFFF',
+                '&:hover': {
+                  bgcolor: 'rgba(255, 183, 77, 0.3)',
+                },
+              }}
+            >
+              {loading ? <CircularProgress size={24} /> : 'Predict'}
+            </Button>
+          </Grid>
+        </Grid>
+
+        {error && (
+          <Typography color="error" sx={{ mt: 2 }}>
+            {error}
+          </Typography>
+        )}
+      </Paper>
 
       {predictions && sentiment && (
-        <Box sx={{ mt: 4 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Paper
-                sx={{
-                  p: 3,
-                  background: 'rgba(26, 26, 26, 0.95)',
-                  backdropFilter: 'blur(10px)',
-                  borderRadius: '10px',
-                  border: '1px solid rgba(255, 183, 77, 0.2)',
-                  mb: 3,
-                }}
-              >
-                <Typography variant="h6" gutterBottom sx={{ color: '#FFB74D' }}>
-                  Energy Sentiment Analysis - {selectedRegion} Region
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Chip
-                      label={`Overall Sentiment: ${sentiment.overallSentiment}`}
-                      sx={{
-                        bgcolor: getSentimentColor(sentiment.overallSentiment),
-                        color: '#fff',
-                        mr: 1,
-                        mb: 1,
-                      }}
-                    />
-                    <Chip
-                      label={`Sentiment Score: ${sentiment.sentimentScore}%`}
-                      sx={{ bgcolor: 'rgba(255, 183, 77, 0.2)', color: '#FFB74D', mr: 1, mb: 1 }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <Typography variant="subtitle1" sx={{ color: '#FFB74D', mb: 1 }}>
-                      Efficiency
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#fff' }}>
-                      Score: {sentiment.efficiency.score}%
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#fff' }}>
-                      Trend: {sentiment.efficiency.trend}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#fff' }}>
-                      {sentiment.efficiency.analysis}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <Typography variant="subtitle1" sx={{ color: '#FFB74D', mb: 1 }}>
-                      Reliability
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#fff' }}>
-                      Score: {sentiment.reliability.score}%
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#fff' }}>
-                      Trend: {sentiment.reliability.trend}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#fff' }}>
-                      {sentiment.reliability.analysis}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <Typography variant="subtitle1" sx={{ color: '#FFB74D', mb: 1 }}>
-                      Sustainability
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#fff' }}>
-                      Score: {sentiment.sustainability.score}%
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#fff' }}>
-                      Trend: {sentiment.sustainability.trend}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#fff' }}>
-                      {sentiment.sustainability.analysis}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="subtitle1" sx={{ color: '#FFB74D', mb: 1 }}>
-                    Key Insights
-                  </Typography>
-                  {sentiment.keyInsights.map((insight, index) => (
-                    <Typography key={index} variant="body2" sx={{ color: '#fff', mb: 0.5 }}>
-                      • {insight}
-                    </Typography>
-                  ))}
-                </Box>
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="subtitle1" sx={{ color: '#FFB74D', mb: 1 }}>
-                    Recommendations
-                  </Typography>
-                  {sentiment.recommendations.map((recommendation, index) => (
-                    <Typography key={index} variant="body2" sx={{ color: '#fff', mb: 0.5 }}>
-                      • {recommendation}
-                    </Typography>
-                  ))}
-                </Box>
-              </Paper>
-            </Grid>
-
-            <Grid item xs={12} md={8}>
-              <Paper
-                sx={{
-                  p: 3,
-                  background: 'rgba(26, 26, 26, 0.95)',
-                  backdropFilter: 'blur(10px)',
-                  borderRadius: '10px',
-                  border: '1px solid rgba(255, 183, 77, 0.2)',
-                }}
-              >
-                <Typography variant="h6" gutterBottom sx={{ color: '#FFB74D' }}>
-                  24-Hour Load Prediction - {selectedRegion} Region
-                </Typography>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 183, 77, 0.1)" />
-                    <XAxis
-                      dataKey="hour"
-                      stroke="#FFB74D"
-                      tick={{ fill: '#FFB74D' }}
-                    />
-                    <YAxis
-                      stroke="#FFB74D"
-                      tick={{ fill: '#FFB74D' }}
-                      label={{
-                        value: 'Load (%)',
-                        angle: -90,
-                        position: 'insideLeft',
-                        fill: '#FFB74D'
-                      }}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: 'rgba(26, 26, 26, 0.95)',
-                        border: '1px solid #FFB74D',
-                        color: '#FFB74D'
-                      }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="consumption"
-                      stroke="#FFB74D"
-                      strokeWidth={2}
-                      dot={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </Paper>
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <Paper
-                sx={{
-                  p: 3,
-                  background: 'rgba(26, 26, 26, 0.95)',
-                  backdropFilter: 'blur(10px)',
-                  borderRadius: '10px',
-                  border: '1px solid rgba(255, 183, 77, 0.2)',
-                  height: '100%',
-                }}
-              >
-                <Typography variant="h6" gutterBottom sx={{ color: '#FFB74D' }}>
-                  Prediction Insights
-                </Typography>
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="body1" sx={{ color: '#FFB74D', mb: 1 }}>
-                    Peak Usage Time: {predictions.peakUsageTime}
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: '#FFB74D', mb: 1 }}>
-                    Potential Savings: {predictions.potentialSavings}
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: '#FFB74D', mb: 1 }}>
-                    Grid Stability Impact: {predictions.gridStabilityImpact}
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: '#FFB74D', mb: 1 }}>
-                    Renewable Utilization: {predictions.renewableUtilization}%
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: '#FFB74D', mb: 1 }}>
-                    Carbon Reduction: {predictions.carbonImpact} tons
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: '#FFB74D', mb: 1 }}>
-                    Confidence Score: {predictions.confidenceScore}%
-                  </Typography>
-                </Box>
-              </Paper>
-            </Grid>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={8}>
+            <Paper
+              sx={{
+                p: 3,
+                background: 'rgba(26, 26, 26, 0.95)',
+                backdropFilter: 'blur(10px)',
+                borderRadius: '10px',
+                border: '1px solid rgba(255, 183, 77, 0.2)',
+              }}
+            >
+              <Typography variant="h6" gutterBottom sx={{ color: '#FFB74D' }}>
+                24-Hour Load Prediction - {selectedRegion} Region
+              </Typography>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 183, 77, 0.1)" />
+                  <XAxis
+                    dataKey="hour"
+                    stroke="#FFB74D"
+                    tick={{ fill: '#FFB74D' }}
+                  />
+                  <YAxis
+                    stroke="#FFB74D"
+                    tick={{ fill: '#FFB74D' }}
+                    label={{
+                      value: 'Load (%)',
+                      angle: -90,
+                      position: 'insideLeft',
+                      fill: '#FFB74D'
+                    }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                      border: '1px solid #FFB74D',
+                      color: '#FFB74D'
+                    }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="consumption"
+                    stroke="#FFB74D"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </Paper>
           </Grid>
-        </Box>
+
+          <Grid item xs={12} md={4}>
+            <Paper
+              sx={{
+                p: 3,
+                background: 'rgba(26, 26, 26, 0.95)',
+                backdropFilter: 'blur(10px)',
+                borderRadius: '10px',
+                border: '1px solid rgba(255, 183, 77, 0.2)',
+              }}
+            >
+              <Typography variant="h6" gutterBottom sx={{ color: '#FFB74D' }}>
+                Prediction Insights
+              </Typography>
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="body1" sx={{ color: '#FFB74D', mb: 1 }}>
+                  Peak Usage Time: {predictions.peakUsageTime}
+                </Typography>
+                <Typography variant="body1" sx={{ color: '#FFB74D', mb: 1 }}>
+                  Potential Savings: {predictions.potentialSavings}
+                </Typography>
+                <Typography variant="body1" sx={{ color: '#FFB74D', mb: 1 }}>
+                  Grid Stability Impact: {predictions.gridStabilityImpact}
+                </Typography>
+                <Typography variant="body1" sx={{ color: '#FFB74D', mb: 1 }}>
+                  Renewable Utilization: {predictions.renewableUtilization}%
+                </Typography>
+                <Typography variant="body1" sx={{ color: '#FFB74D', mb: 1 }}>
+                  Carbon Reduction: {predictions.carbonImpact} tons
+                </Typography>
+                <Typography variant="body1" sx={{ color: '#FFB74D', mb: 1 }}>
+                  Confidence Score: {predictions.confidenceScore}%
+                </Typography>
+              </Box>
+            </Paper>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Paper
+              sx={{
+                p: 3,
+                background: 'rgba(26, 26, 26, 0.95)',
+                backdropFilter: 'blur(10px)',
+                borderRadius: '10px',
+                border: '1px solid rgba(255, 183, 77, 0.2)',
+              }}
+            >
+              <Typography variant="h6" gutterBottom sx={{ color: '#FFB74D' }}>
+                Energy Sentiment Analysis - {selectedRegion} Region
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Chip
+                    label={`Overall Sentiment: ${sentiment.overallSentiment}`}
+                    sx={{
+                      bgcolor: getSentimentColor(sentiment.overallSentiment),
+                      color: '#fff',
+                      mr: 1,
+                      mb: 1,
+                    }}
+                  />
+                  <Chip
+                    label={`Sentiment Score: ${sentiment.sentimentScore}%`}
+                    sx={{ bgcolor: 'rgba(255, 183, 77, 0.2)', color: '#FFB74D', mr: 1, mb: 1 }}
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle1" sx={{ color: '#FFB74D', mb: 1 }}>
+                    Efficiency
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#fff' }}>
+                    Score: {sentiment.efficiency.score}%
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#fff' }}>
+                    Trend: {sentiment.efficiency.trend}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#fff' }}>
+                    {sentiment.efficiency.analysis}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle1" sx={{ color: '#FFB74D', mb: 1 }}>
+                    Reliability
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#fff' }}>
+                    Score: {sentiment.reliability.score}%
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#fff' }}>
+                    Trend: {sentiment.reliability.trend}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#fff' }}>
+                    {sentiment.reliability.analysis}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle1" sx={{ color: '#FFB74D', mb: 1 }}>
+                    Sustainability
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#fff' }}>
+                    Score: {sentiment.sustainability.score}%
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#fff' }}>
+                    Trend: {sentiment.sustainability.trend}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#fff' }}>
+                    {sentiment.sustainability.analysis}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="subtitle1" sx={{ color: '#FFB74D', mb: 1 }}>
+                  Key Insights
+                </Typography>
+                {sentiment.keyInsights.map((insight, index) => (
+                  <Typography key={index} variant="body2" sx={{ color: '#fff', mb: 0.5 }}>
+                    • {insight}
+                  </Typography>
+                ))}
+              </Box>
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="subtitle1" sx={{ color: '#FFB74D', mb: 1 }}>
+                  Recommendations
+                </Typography>
+                {sentiment.recommendations.map((recommendation, index) => (
+                  <Typography key={index} variant="body2" sx={{ color: '#fff', mb: 0.5 }}>
+                    • {recommendation}
+                  </Typography>
+                ))}
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
       )}
     </Box>
   );
