@@ -5,35 +5,12 @@ import TradingChart from '../components/trading/TradingChart';
 import OrderBook from '../components/trading/OrderBook';
 import TradingForm from '../components/trading/TradingForm';
 import TransactionHistory from '../components/trading/TransactionHistory';
-import StateEnergyAnalytics from '../components/analytics/StateEnergyAnalytics';
 import { useTradingContext } from '../context/TradingContext';
 
 const Trading = () => {
   const { marketData, executeTransaction } = useTradingContext();
   const [timeRange, setTimeRange] = useState('24H');
   const [chartData, setChartData] = useState([]);
-  const [stateData, setStateData] = useState({
-    name: 'California',
-    currentLoad: 30000,
-    peakCapacity: 45000,
-    timestamp: new Date().toISOString(),
-    weather: 'Sunny',
-    historicalPattern: 'Normal',
-    totalNodes: 1000,
-    activeNodes: 850,
-    nodeTypes: {
-      solar: 400,
-      wind: 200,
-      storage: 250,
-      conventional: 150
-    },
-    networkHealth: 95,
-    totalGeneration: 35000,
-    renewablePercentage: 65,
-    gridStability: 98,
-    energyStorage: 5000,
-    carbonFootprint: 'Low'
-  });
 
   useEffect(() => {
     const generateChartData = () => {
@@ -124,11 +101,6 @@ const Trading = () => {
             flexDirection: 'column',
           }}>
             <Grid container spacing={3}>
-              {/* State Energy Analytics */}
-              <Grid item xs={12}>
-                <StateEnergyAnalytics stateData={stateData} />
-              </Grid>
-
               {/* Left Column: Chart and Transaction History */}
               <Grid item xs={12} lg={8} sx={{ 
                 height: '100%',

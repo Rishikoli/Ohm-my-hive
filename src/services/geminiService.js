@@ -387,6 +387,129 @@ Respond in a helpful and informative way while staying within your role as a sma
       return "I apologize, but I'm having trouble processing your request at the moment. Please try again later.";
     }
   },
+
+  // Predict load balancing recommendations
+  async predictLoadBalancing(gridData) {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      
+      const prompt = `
+        Analyze the following power grid data and provide load balancing recommendations.
+        Return ONLY a JSON array with this exact structure for each region (no markdown, no explanation):
+        [{
+          "region": string,
+          "currentLoad": number (percentage),
+          "predictedLoad": number (percentage),
+          "recommendation": string ("Redistribute" or "Maintain"),
+          "carbonImpact": number (CO2 reduction in tons),
+          "renewableUtilization": number (percentage),
+          "gridStability": number (percentage)
+        }]
+
+        Grid Data:
+        ${JSON.stringify(gridData, null, 2)}
+        
+        Consider:
+        1. Current load distribution
+        2. Regional renewable energy capacity
+        3. Grid stability metrics
+        4. Carbon footprint impact
+        5. Peak demand patterns`;
+
+      const result = await model.generateContent(prompt);
+      return extractJsonFromResponse(result.response.text());
+    } catch (error) {
+      console.error('Error predicting load balancing:', error);
+      return [];
+    }
+  },
+
+  // Predict EV charging patterns and optimization
+  async predictEVChargingPatterns(regionData) {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      
+      const prompt = `
+        Analyze EV charging patterns and provide optimization recommendations.
+        Return ONLY a JSON array with this exact structure for each time slot (no markdown, no explanation):
+        [{
+          "timeSlot": string,
+          "predictedDemand": number (percentage),
+          "optimalCapacity": number (percentage),
+          "hotspots": string[],
+          "carbonReduction": number (tons),
+          "gridImpact": number (percentage),
+          "renewableIntegration": number (percentage),
+          "recommendations": string[]
+        }]
+
+        Region Data:
+        ${JSON.stringify(regionData, null, 2)}
+        
+        Consider:
+        1. Historical charging patterns
+        2. Grid capacity by region
+        3. Renewable energy availability
+        4. Carbon footprint reduction
+        5. Peak load management`;
+
+      const result = await model.generateContent(prompt);
+      return extractJsonFromResponse(result.response.text());
+    } catch (error) {
+      console.error('Error predicting EV charging patterns:', error);
+      return [];
+    }
+  },
+
+  // Get climate impact analysis for load balancing and EV charging
+  async getClimateImpactAnalysis(gridData, evData) {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      
+      const prompt = `
+        Analyze the climate impact of current grid operations and EV charging patterns.
+        Return ONLY a JSON object with this exact structure (no markdown, no explanation):
+        {
+          "totalCarbonReduction": number (tons),
+          "renewableUtilization": number (percentage),
+          "gridEfficiency": number (percentage),
+          "sustainabilityScore": number (0-100),
+          "recommendations": string[],
+          "impactByRegion": [{
+            "region": string,
+            "carbonReduction": number,
+            "renewableShare": number,
+            "evImpact": number
+          }]
+        }
+
+        Grid Data:
+        ${JSON.stringify(gridData, null, 2)}
+
+        EV Data:
+        ${JSON.stringify(evData, null, 2)}
+        
+        Consider:
+        1. Carbon emissions reduction
+        2. Renewable energy integration
+        3. Grid efficiency improvements
+        4. Regional variations
+        5. EV charging optimization impact`;
+
+      const result = await model.generateContent(prompt);
+      return extractJsonFromResponse(result.response.text());
+    } catch (error) {
+      console.error('Error analyzing climate impact:', error);
+      return {
+        totalCarbonReduction: 0,
+        renewableUtilization: 0,
+        gridEfficiency: 0,
+        sustainabilityScore: 0,
+        recommendations: [],
+        impactByRegion: []
+      };
+    }
+  },
 };
 
 export default geminiService;

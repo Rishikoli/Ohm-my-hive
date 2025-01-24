@@ -114,7 +114,7 @@ const IndiaMap = ({ onStateSelect, selectedMetric = 'energyDemand' }) => {
                         outline: "none"
                       },
                       hover: {
-                        fill: stateName === "Uttarakhand" || stateName === "Odisha" ? "#FFC300" : "#F53",
+                        fill: stateName === "uttaranchal" || stateName === "Odisha" ? "#FFC300" : "#F53",
                         outline: "none",
                         cursor: "pointer"
                       },

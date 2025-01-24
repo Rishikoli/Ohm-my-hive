@@ -199,8 +199,8 @@ const ClimateImpact = () => {
               <Typography variant="h4" sx={{ color: '#FFB74D', mb: 2 }}>
                 Climate Impact Analysis
               </Typography>
-              <Typography variant="body1" sx={{ color: '#fff' }}>
-                Track and analyze your environmental impact in real-time
+              <Typography variant="subtitle1" sx={{ color: 'rgba(255, 183, 77, 0.8)' }}>
+                Real-time analysis of energy usage and environmental impact
               </Typography>
             </Paper>
           </Grid>
