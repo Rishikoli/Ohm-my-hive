@@ -9,7 +9,7 @@
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.14",
     "@mui/x-date-pickers": "^7.24.0",
-    "@react-three/drei": "^9.121.2",
+    "@react-three/drei": "^9.121.3",
     "@react-three/fiber": "^8.17.12",
     "@types/geojson": "^7946.0.15",
     "axios": "^1.7.9",

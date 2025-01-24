@@ -1,9 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import geminiService from '../services/geminiService';
-
-const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 const TradingContext = createContext();
 
@@ -94,88 +90,65 @@ export const TradingProvider = ({ children }) => {
   });
 
   const [orderBook, setOrderBook] = useState({
-    buyOrders: [
-      { price: 12.85, amount: 150, depth: 95 },
-      { price: 12.75, amount: 200, depth: 85 },
-      { price: 12.65, amount: 180, depth: 75 },
-      { price: 12.55, amount: 120, depth: 65 },
-      { price: 12.45, amount: 250, depth: 55 },
-      { price: 12.35, amount: 160, depth: 45 },
-      { price: 12.25, amount: 140, depth: 35 },
-    ],
-    sellOrders: [
-      { price: 13.15, amount: 130, depth: 90 },
-      { price: 13.25, amount: 175, depth: 80 },
-      { price: 13.35, amount: 145, depth: 70 },
-      { price: 13.45, amount: 190, depth: 60 },
-      { price: 13.55, amount: 165, depth: 50 },
-      { price: 13.65, amount: 155, depth: 40 },
-      { price: 13.75, amount: 185, depth: 30 },
-    ],
+    bids: [],
+    asks: []
   });
 
   const [recommendations, setRecommendations] = useState(null);
   const [predictedPrice, setPredictedPrice] = useState(null);
 
-  // Generate mock order book data using Gemini
+  // Generate mock order book data
   const generateOrderBook = async () => {
     try {
-      const prompt = `Generate realistic order book data for energy trading with the following format:
-      {
-        "buyOrders": [
-          { "price": number, "amount": number, "depth": number }
-        ],
-        "sellOrders": [
-          { "price": number, "amount": number, "depth": number }
-        ]
-      }
-      Consider:
-      - Current market price is around ${predictedPrice || 12} credits/kWh
-      - Buy orders should be below market price
-      - Sell orders should be above market price
-      - Depth should be between 0-100
-      - Amount should be between 50-500 kWh
-      Return only the JSON data.`;
+      // Generate random order book data
+      const generateOrders = (count) => {
+        return Array.from({ length: count }, () => ({
+          price: Number((Math.random() * (15 - 5) + 5).toFixed(2)),
+          amount: Math.floor(Math.random() * (500 - 50) + 50)
+        })).sort((a, b) => b.price - a.price);
+      };
 
-      const result = await model.generateContent(prompt);
-      const data = JSON.parse(result.response.text());
+      const data = {
+        bids: generateOrders(5),
+        asks: generateOrders(5)
+      };
+
       setOrderBook(data);
     } catch (error) {
       console.error('Error generating order book:', error);
+      setOrderBook({ bids: [], asks: [] });
     }
   };
 
-  // Generate mock market conditions using Gemini
+  // Generate mock market conditions locally instead of using Gemini
   const generateMarketConditions = async () => {
     try {
-      const prompt = `Generate market conditions for energy trading. Respond with only a JSON object in this exact format, no other text or formatting:
-{
-  "demand": <number between 500-2000>,
-  "supply": <number between 500-2000>,
-  "weather": <one of: "Sunny", "Cloudy", "Rainy", "Windy">,
-  "historicalPrice": <number between 8-15>,
-  "marketTrend": <one of: "Bullish", "Bearish", "Stable">,
-  "tradingVolume": <number between 1000-5000>,
-  "peakHourDemand": <true or false>
-}`;
-
-      const result = await model.generateContent(prompt);
-      const responseText = result.response.text();
+      // Generate random market data locally
+      const weatherOptions = ["Sunny", "Cloudy", "Rainy", "Windy"];
+      const trendOptions = ["Bullish", "Bearish", "Stable"];
       
-      // Clean up the response text to ensure it's valid JSON
-      const cleanJson = responseText.replace(/```json\n?|\n?```/g, '').trim();
-      const conditions = JSON.parse(cleanJson);
-      
-      // Validate the parsed data
-      if (!conditions || typeof conditions !== 'object') {
-        throw new Error('Invalid response format');
-      }
+      const conditions = {
+        demand: Math.floor(Math.random() * (2000 - 500) + 500),
+        supply: Math.floor(Math.random() * (2000 - 500) + 500),
+        weather: weatherOptions[Math.floor(Math.random() * weatherOptions.length)],
+        historicalPrice: Math.floor(Math.random() * (15 - 8) + 8),
+        marketTrend: trendOptions[Math.floor(Math.random() * trendOptions.length)],
+        tradingVolume: Math.floor(Math.random() * (5000 - 1000) + 1000),
+        peakHourDemand: Math.random() > 0.5
+      };
 
       setMarketData(conditions);
       
-      // Get price prediction based on new conditions
-      const predictedPrice = await geminiService.predictEnergyPrice(conditions);
-      setPredictedPrice(predictedPrice);
+      // Calculate predicted price locally
+      const basePrice = conditions.historicalPrice;
+      const demandFactor = conditions.demand / conditions.supply;
+      const weatherFactor = conditions.weather === "Sunny" ? 1.1 : 0.9;
+      const trendFactor = conditions.marketTrend === "Bullish" ? 1.15 : 
+                         conditions.marketTrend === "Bearish" ? 0.85 : 1;
+      
+      const predictedPrice = basePrice * demandFactor * weatherFactor * trendFactor;
+      setPredictedPrice(Number(predictedPrice.toFixed(2)));
+
     } catch (error) {
       console.error('Error generating market conditions:', error);
       // Set fallback market data

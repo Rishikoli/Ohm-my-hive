@@ -2,7 +2,8 @@ import React from 'react';
 import { Container, Grid, Paper, Typography, Box } from '@mui/material';
 import { motion } from 'framer-motion';
 import './Home/HexGrid.css';
-
+// import AnimatedBee from './AnimatedBee';
+import GlowingFlower from './GlowingFlower';
 const Home = () => {
   const generateHexagons = () => {
     const hexagons = [];
@@ -78,6 +79,8 @@ const Home = () => {
                       Ohm My Hive
                     </Typography>
                   </motion.div>
+                  <GlowingFlower />
+
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
