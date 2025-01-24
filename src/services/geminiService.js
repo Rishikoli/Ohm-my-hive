@@ -510,6 +510,60 @@ Respond in a helpful and informative way while staying within your role as a sma
       };
     }
   },
+
+  // Analyze energy sentiment for regions
+  async analyzeEnergySentiment(regionData) {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      
+      const prompt = `
+        Analyze the energy consumption and efficiency sentiment for a region with the following data:
+        - Region: ${regionData.region}
+        - Current Load: ${regionData.currentLoad}%
+        - Grid Stability: ${regionData.gridStability}%
+        - Renewable Share: ${regionData.renewableShare}%
+        - Peak Hours: ${regionData.peakHours}
+        - Weather: ${regionData.weather}
+        
+        Provide a sentiment analysis considering:
+        1. Energy efficiency
+        2. Grid reliability
+        3. Sustainability
+        4. Consumer behavior
+        5. Future outlook
+        
+        Return a JSON object with the following structure ONLY (no markdown, no explanation):
+        {
+          "overallSentiment": string (Positive/Neutral/Negative),
+          "sentimentScore": number (0-100),
+          "efficiency": {
+            "score": number (0-100),
+            "trend": string,
+            "analysis": string
+          },
+          "reliability": {
+            "score": number (0-100),
+            "trend": string,
+            "analysis": string
+          },
+          "sustainability": {
+            "score": number (0-100),
+            "trend": string,
+            "analysis": string
+          },
+          "recommendations": string[],
+          "keyInsights": string[]
+        }`;
+
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      return extractJsonFromResponse(text);
+    } catch (error) {
+      console.error('Error analyzing energy sentiment:', error);
+      throw error;
+    }
+  },
 };
 
 export default geminiService;
