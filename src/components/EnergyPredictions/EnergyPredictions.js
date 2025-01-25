@@ -115,7 +115,7 @@ const EnergyPredictions = ({ selectedState, data }) => {
     }
   };
 
-  const chartData = predictions?.hourlyPredictions.map((value, index) => ({
+  const chartData = predictions?.hourlyPredictions?.map((value, index) => ({
     hour: `${index}:00`,
     consumption: parseFloat(value)
   })) || [];

@@ -86,10 +86,11 @@ const OrderCell = styled(TableCell)({
 
 const OrderBook = () => {
   const { orderBook } = useTradingContext();
-  const { buyOrders, sellOrders } = orderBook;
+  const buyOrders = orderBook?.bids || [];
+  const sellOrders = orderBook?.asks || [];
 
-  const maxBuyVolume = Math.max(...buyOrders.map(order => order.amount));
-  const maxSellVolume = Math.max(...sellOrders.map(order => order.amount));
+  const maxBuyVolume = buyOrders.length ? Math.max(...buyOrders.map(order => order.amount)) : 0;
+  const maxSellVolume = sellOrders.length ? Math.max(...sellOrders.map(order => order.amount)) : 0;
   const maxVolume = Math.max(maxBuyVolume, maxSellVolume);
 
   return (
